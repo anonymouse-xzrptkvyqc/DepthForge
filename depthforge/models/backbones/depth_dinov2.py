@@ -18,6 +18,18 @@ from depth_anything_v2.dpt import DepthAnythingV2
 import torch
 import torch.nn.functional as F
 
+import types
+
+def forward_features_extra(self, x, masks=None):
+        if isinstance(x, list):
+            return self.forward_features_list(x, masks)
+        x = self.prepare_tokens_with_masks(x, masks)
+        out = []
+        for idx, blk in enumerate(self.blocks):
+            x = blk(x)
+            out.append(x)
+        return out
+
 
 @BACKBONES.register_module()
 class DepthForgeDinoVisionTransformer(DinoVisionTransformer):
@@ -65,6 +77,7 @@ class DepthForgeDinoVisionTransformer(DinoVisionTransformer):
         self.depth_anything = DepthAnythingV2(**model_configs["vitl"])
         self.depth_anything.load_state_dict(checkpoint, strict=True)
         self.depth_anything = self.depth_anything.to(DEVICE).eval()
+        self.depth_anything.pretrained.forward_features_extra = types.MethodType(forward_features_extra, self.depth_anything.pretrained)
 
     def forward_features(self, x, masks=None):
         B, _, h, w = x.shape

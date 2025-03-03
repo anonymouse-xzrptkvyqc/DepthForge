@@ -21,7 +21,7 @@ train_pipeline = [
     dict(type="PackSegInputs"),
 ]
 train_dataloader = dict(
-    batch_size=5, dataset=dict(pipeline=train_pipeline), pin_memory=True
+    batch_size=8, dataset=dict(pipeline=train_pipeline), pin_memory=True
 )
 
 # AdamW optimizer, no weight decay for position embedding & layer norm
@@ -45,7 +45,7 @@ optim_wrapper = dict(
 )
 param_scheduler = [
     # dict(type="PolyLR", eta_min=0, power=0.9, begin=0, end=40000, by_epoch=False)
-    dict(type="OneCycleLR",eta_max=0.0001,total_steps=50000,pct_start=0.1,anneal_strategy="cos",div_factor=10,final_div_factor=10,by_epoch=False)
+    dict(type="OneCycleLR",eta_max=0.0001,total_steps=50000,pct_start=0.2,anneal_strategy="cos",div_factor=10,final_div_factor=10,by_epoch=False)
 ]
 
 # training schedule for 160k

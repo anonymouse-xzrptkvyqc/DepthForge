@@ -6,3 +6,4 @@ matplotlib
 regex
 timm
 einops
+lightning
