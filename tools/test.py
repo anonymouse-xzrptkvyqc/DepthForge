@@ -21,7 +21,7 @@ warnings.filterwarnings("ignore")
 def parse_args():
     parser = argparse.ArgumentParser(description="MMSeg test (and eval) a model")
     parser.add_argument("config", help="train config file path")
-    parser.add_argument("checkpoint", help="rein and head checkpoint file")
+    parser.add_argument("checkpoint", help="depthforge and head checkpoint file")
     parser.add_argument("--backbone", help="backbone checkpoint file", default="")
     parser.add_argument(
         "--work-dir",

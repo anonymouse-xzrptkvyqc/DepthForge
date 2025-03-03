@@ -2,7 +2,7 @@
 _base_ = [
     "../_base_/datasets/dg_citys2acdc_1024x1024.py",
     "../_base_/default_runtime.py",
-    "../_base_/models/rein_dinov2_mask2former.py",
+    "../_base_/models/depthforge_dinov2_mask2former.py",
 ]
 crop_size = (1024, 1024)
 model = dict(
@@ -50,7 +50,7 @@ optim_wrapper = dict(
             "query_embed": embed_multi,
             "level_embed": embed_multi,
             "learnable_tokens": embed_multi,
-            "reins.scale": embed_multi,
+            "depthforge.scale": embed_multi,
         },
         norm_decay_mult=0.0,
     ),

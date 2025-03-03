@@ -1,4 +1,3 @@
-randomness = dict(seed=4307, deterministic=False)
 
 # dataset config
 _base_ = [
@@ -38,7 +37,7 @@ optim_wrapper = dict(
             "query_embed": embed_multi,
             "level_embed": embed_multi,
             "learnable_tokens": embed_multi,
-            "reins.scale": embed_multi,
+            "depthforge.scale": embed_multi,
         },
         norm_decay_mult=0.0,
     ),

@@ -30,7 +30,7 @@ def parse_args():
     parser.add_argument("config", help="Path to the training configuration file.")
     parser.add_argument(
         "checkpoint",
-        help="Path to the checkpoint file for both the REIN and head models.",
+        help="Path to the checkpoint file for both the depthforge and head models.",
     )
     parser.add_argument(
         "images", help="Directory or file path of images to be processed."

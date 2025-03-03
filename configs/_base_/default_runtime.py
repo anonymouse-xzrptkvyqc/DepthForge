@@ -14,6 +14,4 @@ load_from = None
 resume = False
 
 tta_model = dict(type="SegTTAModel")
-randomness = dict(
-    seed=42,
-)
+randomness = dict(seed=4307, deterministic=False)

@@ -15,7 +15,7 @@ model = dict(
     ),
     backbone=dict(
         type="DepthForgeEVA2",
-        reins_config=dict(
+        depthforge_config=dict(
             type="DepthForgeReins",
             token_length=100,
             embed_dims=1024,

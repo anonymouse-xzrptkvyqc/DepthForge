@@ -10,11 +10,11 @@ import torch.nn.functional as F
 class DepthForgeCLIPVisionTransformer(CLIPVisionTransformer):
     def __init__(
         self,
-        reins_config=None,
+        depthforge_config=None,
         **kwargs,
     ):
         super().__init__(**kwargs)
-        self.depthforge: DepthForge = MODELS.build(reins_config)
+        self.depthforge: DepthForge = MODELS.build(depthforge_config)
 
     def forward(self, x: torch.Tensor):
         x = self.conv1(x)  # shape = [*, width, grid, grid]
@@ -82,12 +82,12 @@ class DepthForgeCLIPVisionTransformer(CLIPVisionTransformer):
     def train(self, mode: bool = True):
         if not mode:
             return super().train(mode)
-        set_requires_grad(self, ["fpn", "reins"])
-        set_train(self, ["fpn", "reins"])
+        set_requires_grad(self, ["fpn", "depthforge"])
+        set_train(self, ["fpn", "depthforge"])
 
     def state_dict(self, destination, prefix, keep_vars):
         state = super().state_dict(destination, prefix, keep_vars)
-        keys = [k for k in state.keys() if ("rein" not in k) and ("fpn" not in k)]
+        keys = [k for k in state.keys() if ("depthforge" not in k) and ("fpn" not in k)]
         for key in keys:
             state.pop(key)
             if key in destination:

@@ -9,9 +9,9 @@ from .utils import set_requires_grad, set_train
 
 @BACKBONES.register_module()
 class DepthForgeEVA2(EVA2):
-    def __init__(self, reins_config=None, **kwargs):
+    def __init__(self, depthforge_config=None, **kwargs):
         super().__init__(**kwargs)
-        self.depthforge: DepthForge = MODELS.build(reins_config)
+        self.depthforge: DepthForge = MODELS.build(depthforge_config)
 
     def forward_features(self, x):
         B, C, H, W = x.shape
@@ -56,12 +56,12 @@ class DepthForgeEVA2(EVA2):
     def train(self, mode: bool = True):
         if not mode:
             return super().train(mode)
-        set_requires_grad(self, ["reins"])
-        set_train(self, ["reins"])
+        set_requires_grad(self, ["depthforge"])
+        set_train(self, ["depthforge"])
 
     def state_dict(self, destination, prefix, keep_vars):
         state = super().state_dict(destination, prefix, keep_vars)
-        keys = [k for k in state.keys() if "rein" not in k]
+        keys = [k for k in state.keys() if "depthforge" not in k]
         for key in keys:
             state.pop(key)
             if key in destination:
