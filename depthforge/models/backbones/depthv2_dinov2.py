@@ -8,19 +8,18 @@ from pathlib import Path
 
 current_dir = Path(__file__).parent
 
-depth_anything_dir = current_dir / "third_party" / "Depth-Anything-V2"
+depth_anything_dir = current_dir / "third_party" / "PromptDA"
 
 sys.path.insert(0, str(depth_anything_dir))
 
-from depth_anything_v2.dpt import DepthAnythingV2
+from promptda.promptda import PromptDA
 
-# from .depth_anything_v2.dpt import DepthAnythingV2
 import torch
 import torch.nn.functional as F
 
 
 @BACKBONES.register_module()
-class DepthForgeDinoVisionTransformer(DinoVisionTransformer):
+class DepthForgeDinoVisionTransformerV2(DinoVisionTransformer):
     def __init__(
         self,
         reins_config=None,
@@ -35,36 +34,7 @@ class DepthForgeDinoVisionTransformer(DinoVisionTransformer):
             else "mps" if torch.backends.mps.is_available() else "cpu"
         )
 
-        model_configs = {
-            "vits": {
-                "encoder": "vits",
-                "features": 64,
-                "out_channels": [48, 96, 192, 384],
-            },
-            "vitb": {
-                "encoder": "vitb",
-                "features": 128,
-                "out_channels": [96, 192, 384, 768],
-            },
-            "vitl": {
-                "encoder": "vitl",
-                "features": 256,
-                "out_channels": [256, 512, 1024, 1024],
-            },
-            "vitg": {
-                "encoder": "vitg",
-                "features": 384,
-                "out_channels": [1536, 1536, 1536, 1536],
-            },
-        }
-
-        checkpoint = torch.load(
-            f"checkpoints/depth_anything_v2_vitl.pth", map_location="cpu"
-        )
-
-        self.depth_anything = DepthAnythingV2(**model_configs["vitl"])
-        self.depth_anything.load_state_dict(checkpoint, strict=True)
-        self.depth_anything = self.depth_anything.to(DEVICE).eval()
+        self.depth_anything = PromptDA.from_pretrained("depth-anything/prompt-depth-anything-vitl").to(DEVICE).eval()
 
     def forward_features(self, x, masks=None):
         B, _, h, w = x.shape
@@ -73,7 +43,7 @@ class DepthForgeDinoVisionTransformer(DinoVisionTransformer):
             x_depth = F.interpolate(x, (518, 518), mode="bilinear", align_corners=False)
         if h == 1024:
             x_depth = F.interpolate(x, (1036, 1036), mode="bilinear", align_corners=False)
-        depth_features = self.depth_anything.pretrained.forward_features_extra(x_depth)
+        depth_features = self.depth_anything.self.pretrained.forward_features_extra(x_depth)
 
         H, W = h // self.patch_size, w // self.patch_size
         x = self.prepare_tokens_with_masks(x, masks)

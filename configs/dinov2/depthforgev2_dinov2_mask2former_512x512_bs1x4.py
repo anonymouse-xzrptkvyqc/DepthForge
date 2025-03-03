@@ -2,9 +2,9 @@ randomness = dict(seed=4307, deterministic=False)
 
 # dataset config
 _base_ = [
-    "../_base_/datasets/dg_citys2acdc_512x512.py",
+    "../_base_/datasets/dg_gta_512x512.py",
     "../_base_/default_runtime.py",
-    "../_base_/models/depthforge_dinov2_mask2former.py",
+    "../_base_/models/depthforgev2_dinov2_mask2former.py",
 ]
 train_pipeline = [
     dict(type="LoadImageFromFile", imdecode_backend="pillow"),
