@@ -1,4 +1,4 @@
-# DepthForge
+# Stronger, Steadier & Superior: Geometric Consistency in Depth VFM Forges Domain Generalized Semantic Segmentation
 ## Installation & Environment Setup
 
 Clone the repository:
