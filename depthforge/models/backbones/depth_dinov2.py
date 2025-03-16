@@ -70,23 +70,14 @@ class DepthForgeDinoVisionTransformer(DinoVisionTransformer):
             },
         }
 
-        checkpoint = torch.load(
-            f"checkpoints/depth_anything_v2_vitl.pth", map_location="cpu"
-        )
-
         self.depth_anything = DepthAnythingV2(**model_configs["vitl"])
-        self.depth_anything.load_state_dict(checkpoint, strict=True)
         self.depth_anything = self.depth_anything.to(DEVICE).eval()
         self.depth_anything.pretrained.forward_features_extra = types.MethodType(forward_features_extra, self.depth_anything.pretrained)
 
     def forward_features(self, x, masks=None):
         B, _, h, w = x.shape
 
-        if h == 512:
-            x_depth = F.interpolate(x, (518, 518), mode="bilinear", align_corners=False)
-        if h == 1024:
-            x_depth = F.interpolate(x, (1036, 1036), mode="bilinear", align_corners=False)
-        depth_features = self.depth_anything.pretrained.forward_features_extra(x_depth)
+        depth_features = self.depth_anything.pretrained.forward_features_extra(x)
 
         H, W = h // self.patch_size, w // self.patch_size
         x = self.prepare_tokens_with_masks(x, masks)

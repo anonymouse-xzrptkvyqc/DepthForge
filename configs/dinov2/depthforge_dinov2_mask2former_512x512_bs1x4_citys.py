@@ -29,7 +29,7 @@ embed_multi = dict(lr_mult=1.0, decay_mult=0.0)
 optim_wrapper = dict(
     constructor="PEFTOptimWrapperConstructor",
     optimizer=dict(
-        type="AdamW", lr=0.0005, weight_decay=0.05, eps=1e-8, betas=(0.9, 0.999)
+        type="AdamW", lr=0.0001, weight_decay=0.05, eps=1e-8, betas=(0.9, 0.999)
     ),
     paramwise_cfg=dict(
         custom_keys={
@@ -44,7 +44,7 @@ optim_wrapper = dict(
 )
 param_scheduler = [
     # dict(type="PolyLR", eta_min=0, power=0.9, begin=0, end=40000, by_epoch=False)
-    dict(type="OneCycleLR",eta_max=0.0005,total_steps=50000,pct_start=0.2,anneal_strategy="cos",div_factor=10,final_div_factor=10,by_epoch=False)
+    dict(type="OneCycleLR",eta_max=0.0001,total_steps=50000,pct_start=0.1,anneal_strategy="cos",div_factor=10,final_div_factor=10,by_epoch=False)
 ]
 
 # training schedule for 160k
