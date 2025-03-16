@@ -11,6 +11,7 @@ import argparse
 def parse_args():
     args = argparse.ArgumentParser()
     args.add_argument("pretrained", type=str)
+    args.add_argument("depthanything", type=str)
     args.add_argument("converted", type=str)
     args.add_argument("--kernel", default=16, type=int)
     args.add_argument("--height", default=512, type=int)
@@ -68,9 +69,40 @@ def interpolate_pos_embed_(
     )
 
 
+def remove_pretrained_prefix(state_dict):
+    prefix = "pretrained."
+    new_state_dict = {}
+    changed_keys = set()
+
+    for k, v in state_dict.items():
+        if k.startswith(prefix):
+            new_k = k[len(prefix) :]
+            new_state_dict[new_k] = v
+            changed_keys.add(new_k)
+        else:
+            new_state_dict[k] = v
+
+    return new_state_dict, changed_keys
+
+
+def restore_pretrained_prefix(state_dict, changed_keys):
+    prefix = "pretrained."
+    new_state_dict = {}
+
+    for k, v in state_dict.items():
+        if k in changed_keys:
+            new_k = prefix + k
+        else:
+            new_k = k
+        new_state_dict[new_k] = v
+
+    return new_state_dict
+
+
 def main():
     args = parse_args()
     pretrained_path = args.pretrained
+    depthanything_path = args.depthanything
     converted_path = args.converted
     kernel_conv = args.kernel
     crop_size = (args.height, args.width)
@@ -78,6 +110,16 @@ def main():
     print("Load from", pretrained_path)
     interpolate_patch_embed_(weight, kernel_conv=kernel_conv)
     interpolate_pos_embed_(weight, crop_size=crop_size, kernel_conv=kernel_conv)
+    # weight.update({f"backbone.{k}": v for k, v in weight.items()})
+    depthweight = load_weight(depthanything_path)
+    print("Load from", depthanything_path)
+    sd_no_pretrained, changed_keys = remove_pretrained_prefix(depthweight)
+    interpolate_patch_embed_(sd_no_pretrained, kernel_conv=kernel_conv)
+    interpolate_pos_embed_(
+        sd_no_pretrained, crop_size=crop_size, kernel_conv=kernel_conv
+    )
+    depthweight = restore_pretrained_prefix(sd_no_pretrained, changed_keys)
+    weight.update({f"depth_anything.{k}": v for k, v in depthweight.items()})
     torch.save(weight, converted_path)
     print("Save to", converted_path)
     return args
