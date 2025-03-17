@@ -1,4 +1,5 @@
-# DepthForge
+# Stronger, Steadier & Superior: Geometric Consistency in Depth VFM Forges Domain Generalized Semantic Segmentation
+
 ## Installation & Environment Setup
 
 Clone the repository:
@@ -100,20 +101,34 @@ DepthForge
 
 ## Pre-trained Weights & Dataset Downloads
 
-* **Download:** 
-  Download the pre-trained weights for testing from [facebookresearch](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_pretrain.pth). Ensure the file name remains unchanged and place it in the project directory. You can also download the DepthAnything weights from [DepthAnything GitHub](https://github.com/DepthAnything/Depth-Anything-V2).
+**Download:** 
+Download the pre-trained weights for testing from [facebookresearch](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_pretrain.pth). Ensure the file name remains unchanged and place it in the project directory. You can also download the DepthAnything weights from [DepthAnything GitHub](https://github.com/DepthAnything/Depth-Anything-V2).
 
-* **Convert:** 
-  Convert the pre-trained weights for training or evaluation by running:
-  
-  ```bash
-  python tools/convert_models/convert_dinov2.py checkpoints/dinov2_vitl14_pretrain.pth checkpoints/depth_anything_v2_vitl.pth checkpoints/dinov2_depth_converted.pth
+**Convert:** 
 
-* For 1024x1024 resolution (optional), run:
+Convert the pre-trained weights for training or evaluation by running:
 
-  ```bash
-  python tools/convert_models/convert_dinov2.py checkpoints/dinov2_vitl14_pretrain.pth checkpoints/depth_anything_v2_vitl.pth checkpoints/dinov2_depth_converted_1024x1024.pth --height 1024 --width 1024
-  ```
+```bash
+python tools/convert_models/convert_dinov2_depth.py checkpoints/dinov2_vitl14_pretrain.pth checkpoints/depth_anything_v2_vitl.pth checkpoints/dinov2_converted_depth.pth
+```
+
+Optional: Converting for 1024×1024 Resolution
+
+```bash
+python tools/convert_models/convert_dinov2_depth.py checkpoints/dinov2_vitl14_pretrain.pth checkpoints/depth_anything_v2_vitl.pth checkpoints/dinov2_converted_depth_1024x1024.pth --height 1024 --width 1024
+```
+
+Convert the pre-trained weights for DepthForge V2 training or evaluation by running:
+
+```bash
+python tools/convert_models/convert_dinov2_depthv2.py checkpoints/dinov2_vitl14_pretrain.pth checkpoints/promptda_vitl.ckpt checkpoints/dinov2_converted_depthv2.pth
+```
+
+Optional: DepthForge V2 Conversion for 1024×1024 Resolution
+
+```bash
+python tools/convert_models/convert_dinov2_depthv2.py checkpoints/dinov2_vitl14_pretrain.pth checkpoints/promptda_vitl.ckpt checkpoints/dinov2_converted_depth_1024x1024.pth
+```
 
 ## Training
 
