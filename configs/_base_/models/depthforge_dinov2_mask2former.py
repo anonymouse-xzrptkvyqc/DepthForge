@@ -36,7 +36,7 @@ model = dict(
         ffn_bias=True,
         init_cfg=dict(
             type="Pretrained",
-            checkpoint="checkpoints/dinov2_depth_converted.pth",
+            checkpoint="checkpoints/dinov2_converted_depth.pth",
         ),
     ),
     decode_head=dict(

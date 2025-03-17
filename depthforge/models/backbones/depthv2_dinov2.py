@@ -45,17 +45,13 @@ class DepthForgeDinoVisionTransformerV2(DinoVisionTransformer):
             else "mps" if torch.backends.mps.is_available() else "cpu"
         )
 
-        self.depth_anything = PromptDA(ckpt_path=f"checkpoints/promptda_vitl.ckpt").to(DEVICE).eval()
+        self.depth_anything = PromptDA().to(DEVICE).eval()
         self.depth_anything.pretrained.forward_features_extra = types.MethodType(forward_features_extra, self.depth_anything.pretrained)
 
     def forward_features(self, x, masks=None):
         B, _, h, w = x.shape
 
-        if h == 512:
-            x_depth = F.interpolate(x, (518, 518), mode="bilinear", align_corners=False)
-        if h == 1024:
-            x_depth = F.interpolate(x, (1036, 1036), mode="bilinear", align_corners=False)
-        depth_features = self.depth_anything.pretrained.forward_features_extra(x_depth)
+        depth_features = self.depth_anything.pretrained.forward_features_extra(x)
 
         H, W = h // self.patch_size, w // self.patch_size
         x = self.prepare_tokens_with_masks(x, masks)

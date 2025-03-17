@@ -91,19 +91,11 @@ class DepthForge(nn.Module):
         has_cls_token=True,
     ) -> Tensor:
         if batch_first:
-
-            depth_features = depth_features[:, 1:, :]
-
-            depth_features = F.interpolate(
-                depth_features.transpose(1, 2),
-                size=(feats.shape[1]-1,),
-                mode="linear",
-                align_corners=False,
-            ).transpose(1, 2)
             feats = feats.permute(1, 0, 2)
             depth_features = depth_features.permute(1, 0, 2)
 
         if has_cls_token:
+            _, depth_features = torch.tensor_split(depth_features, [1], dim=0)
             cls_token, feats = torch.tensor_split(feats, [1], dim=0)
 
         tokens = self.get_tokens(layer)

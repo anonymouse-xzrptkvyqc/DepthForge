@@ -13,10 +13,10 @@ gta_train_pipeline = [
 ]
 gta_test_pipeline = [
     dict(type="LoadImageFromFile", imdecode_backend="pillow"),
-    dict(type="Resize", scale=(1280, 720), keep_ratio=True),
+    dict(type="LoadAnnotations", imdecode_backend="pillow"),
+    dict(type="Resize", scale=(1280, 720)),
     # add loading annotation after ``Resize`` because ground truth
     # does not need to do resize data transform
-    dict(type="LoadAnnotations", imdecode_backend="pillow"),
     dict(type="PackSegInputs"),
 ]
 train_gta = dict(

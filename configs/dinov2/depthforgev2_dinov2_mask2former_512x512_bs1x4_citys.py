@@ -44,11 +44,11 @@ optim_wrapper = dict(
 )
 param_scheduler = [
     # dict(type="PolyLR", eta_min=0, power=0.9, begin=0, end=40000, by_epoch=False)
-    dict(type="OneCycleLR",eta_max=0.0001,total_steps=50000,pct_start=0.1,anneal_strategy="cos",div_factor=10,final_div_factor=10,by_epoch=False)
+    dict(type="OneCycleLR",eta_max=0.0001,total_steps=40000,pct_start=0.1,anneal_strategy="cos",div_factor=10,final_div_factor=10,by_epoch=False)
 ]
 
 # training schedule for 160k
-train_cfg = dict(type="IterBasedTrainLoop", max_iters=50000, val_interval=10000)
+train_cfg = dict(type="IterBasedTrainLoop", max_iters=40000, val_interval=10000)
 val_cfg = dict(type="ValLoop")
 test_cfg = dict(type="TestLoop")
 default_hooks = dict(
